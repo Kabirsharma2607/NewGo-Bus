@@ -1,10 +1,23 @@
 import React from "react";
 import "../resources/global.css";
-import { Form } from "antd";
-import { Link } from "react-router-dom";
+import { Form, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 function Login() {
-  const onFinish = (values) => {
-    console.log(values);
+  const navigateToHome = useNavigate();
+  const onFinish = async (values) => {
+    try {
+      const response = await axios.post("/api/users/login", values);
+      if (response.data.success) {
+        message.success(response.data.message);
+        localStorage.setItem("token", response.data.data);
+        navigateToHome("/");
+      } else {
+        message.error(response.data.message);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
   };
   return (
     <div className="h-screen d-flex justify-content-center align-items-center">
