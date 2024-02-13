@@ -22,13 +22,13 @@ function Login() {
   return (
     <div className="h-screen d-flex justify-content-center align-items-center">
       <div className="w-400 card p-3">
-        <h1 className="text-lg">NewGo - Register</h1>
+        <h1 className="text-lg">NewGo - Login</h1>
         <hr />
         <Form layout="vertical" onFinish={onFinish}>
-          <Form.Item label="Email" name="E-Mail">
+          <Form.Item label="Email" name="email">
             <input type="text" />
           </Form.Item>
-          <Form.Item label="Password" name="Password">
+          <Form.Item label="Password" name="password">
             <input type="password" />
           </Form.Item>
           <div className="d-flex justify-content-between align-items-center">
