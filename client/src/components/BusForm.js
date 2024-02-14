@@ -49,7 +49,7 @@ function BusForm({ showBusForm, setShowBusForm, type = "add" }) {
             </Col>
             <Col lg={12} xs={24}>
               <Form.Item label="Capacity" name="capacity">
-                <input type="text" />
+                <input type="number" />
               </Form.Item>
             </Col>
             <Col lg={12} xs={24}>
@@ -84,7 +84,7 @@ function BusForm({ showBusForm, setShowBusForm, type = "add" }) {
             </Col>
             <Col lg={12} xs={24}>
               <Form.Item label="Fare" name="to">
-                <input type="text" />
+                <input type="number" />
               </Form.Item>
             </Col>
           </Row>
