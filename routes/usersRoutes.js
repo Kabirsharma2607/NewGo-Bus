@@ -1,11 +1,13 @@
+// Import necessary modules and configurations
 const router = require("express").Router();
+const jwt = require("jsonwebtoken");
 const User = require("../models/usersModel");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const authMiddleware = require("../middlewares/authMiddleware");
 
-// When new user registers
+// Route for user registration
 router.post("/register", async (req, res) => {
+  // Validation function for password
   const validPassword = (password) => {
     // Minimum length of 8 characters
     if (password.length < 8) {
@@ -55,6 +57,7 @@ router.post("/register", async (req, res) => {
   };
 
   const validEmail = (email) => {
+    // Use a regular expression to check if the email is valid
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
@@ -69,7 +72,9 @@ router.post("/register", async (req, res) => {
   };
 
   try {
+    // Check if the user with the provided email already exists
     const existingUser = await User.findOne({ email: req.body.email });
+    // If exists, return an error response
     if (existingUser) {
       return res.send({
         message: "User already exists",
@@ -77,8 +82,9 @@ router.post("/register", async (req, res) => {
         data: null,
       });
     }
-
+    // Validate the email using the validEmail function
     const validationEmail = validEmail(req.body.email);
+    // If not valid, return an error response
     if (!validationEmail.valid) {
       return res.send({
         message: validationEmail.message,
@@ -86,9 +92,9 @@ router.post("/register", async (req, res) => {
         data: null,
       });
     }
-
+    // Validate the password using the validPassword function
     const validationResult = validPassword(req.body.password);
-
+    // If not valid, return an error response
     if (!validationResult.valid) {
       return res.send({
         message: validationResult.message,
@@ -96,17 +102,22 @@ router.post("/register", async (req, res) => {
         data: null,
       });
     }
-
+    // Hash the password using bcrypt
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     req.body.password = hashedPassword;
+    // Create a new User instance with the hashed password
     const newUser = new User(req.body);
+    // Save the new user to the database
     await newUser.save();
+    // Return a success response
+
     res.send({
       message: "User created Successfully",
       success: true,
       data: null,
     });
   } catch (error) {
+    // Return an error response if any exception occurs
     res.send({
       message: error.message,
       success: false,
@@ -115,10 +126,12 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login User
+// Route for user login
 router.post("/login", async (req, res) => {
   try {
+    // Check if the user with the provided email exists
     const userExists = await User.findOne({ email: req.body.email });
+    // If not exists, return an error response
     if (!userExists) {
       return res.send({
         message: "User does not exist",
@@ -126,10 +139,12 @@ router.post("/login", async (req, res) => {
         data: null,
       });
     }
+    // Compare the provided password with the hashed password in the database
     const passwordMatched = await bcrypt.compare(
       req.body.password,
       userExists.password
     );
+    // If passwords do not match, return an error response
     if (!passwordMatched) {
       return res.send({
         message: "Wrong Password",
@@ -137,6 +152,7 @@ router.post("/login", async (req, res) => {
         data: null,
       });
     }
+    // Generate a JWT token for the user
     const token = jwt.sign(
       {
         userId: userExists._id,
@@ -144,12 +160,14 @@ router.post("/login", async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
+    // Return a success response with the token
     res.send({
       message: "User logged in successfully",
       success: true,
       data: token,
     });
   } catch (error) {
+    // Return an error response if any exception occurs
     res.send({
       message: error.message,
       success: false,
@@ -158,16 +176,19 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Get user by ID
+// Route to get user by ID (protected route using authMiddleware)
 router.post("/get-user-by-id", authMiddleware, async (req, res) => {
   try {
+    // Fetch the user from the database using the user ID from the request body
     const user = await User.findById(req.body.userId);
+    // Return a success response with the user data
     res.send({
       message: "User fetched Successfully",
       success: true,
       data: user,
     });
   } catch (error) {
+    // Return an error response if any exception occurs
     res.send({
       message: error.message,
       success: false,
@@ -176,4 +197,5 @@ router.post("/get-user-by-id", authMiddleware, async (req, res) => {
   }
 });
 
+// Export the router for use in the main application
 module.exports = router;

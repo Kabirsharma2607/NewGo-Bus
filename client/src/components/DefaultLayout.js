@@ -2,10 +2,15 @@ import React, { Children, useState } from "react";
 import "../resources/layout.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+// Functional component for the default layout of the application
 function DefaultLayout({ children }) {
+  // State to manage the collapse/expand state of the sidebar
   const [collapsed, setCollapsed] = useState(false);
+  // Redux state: User information
   const { user } = useSelector((state) => state.users);
+  // Navigation function to navigate to different routes
   const navigateToPath = useNavigate();
+  // Menu items for regular users
   const userMenu = [
     {
       name: "Home",
@@ -28,6 +33,7 @@ function DefaultLayout({ children }) {
       icon: "ri-logout-box-line",
     },
   ];
+  // Menu items for admin users
   const adminMenu = [
     {
       name: "Home",
@@ -55,8 +61,12 @@ function DefaultLayout({ children }) {
       icon: "ri-logout-box-line",
     },
   ];
+  // Determine which set of menu items to render based on user role
   const menuToBeRendered = user?.isAdmin ? adminMenu : userMenu;
+  // Get the currently active route
   const activeRoute = window.location.pathname;
+
+  // Render the layout structure
   return (
     <div className="layout-parent">
       <div className="sidebar">
@@ -127,4 +137,5 @@ function DefaultLayout({ children }) {
   );
 }
 
+// Export the DefaultLayout component
 export default DefaultLayout;

@@ -1,29 +1,37 @@
+// Import the Mongoose library
 const mongoose = require("mongoose");
 
+// Define the booking schema
 const bookingSchema = new mongoose.Schema(
   {
+    // Reference to the 'buses' collection using ObjectId
     bus: {
       type: mongoose.Schema.ObjectId,
       ref: "buses",
-      require: true,
+      required: true,
     },
+    // Reference to the 'users' collection using ObjectId
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "users",
-      require: true,
+      required: true,
     },
+    // Array of seats booked for the booking
     seats: {
       type: Array,
-      require: true,
+      required: true,
     },
+    // Transaction ID for the booking
     transactionId: {
       type: String,
-      require: true,
+      required: true,
     },
   },
   {
+    // Include timestamps for createdAt and updatedAt
     timestamps: true,
   }
 );
 
+// Export the Mongoose model for the 'bookings' collection
 module.exports = mongoose.model("bookings", bookingSchema);
