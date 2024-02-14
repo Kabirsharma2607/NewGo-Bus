@@ -46,7 +46,7 @@ function ProtectedRoute({ children }) {
       navigateToLogin("/login");
     }
   }, []);
-  return <div>{loading ? <div>Loading...</div> : <DefaultLayout />}</div>;
+  return <div>{!loading && <DefaultLayout>{children}</DefaultLayout>}</div>;
 }
 
 export default ProtectedRoute;
