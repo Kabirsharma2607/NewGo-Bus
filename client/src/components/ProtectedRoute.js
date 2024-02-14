@@ -1,12 +1,21 @@
+import { message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { SetUser } from "../redux/usersSlice";
+import { HideLoading, ShowLoading } from "../redux/alertsSlice";
+import DefaultLayout from "./DefaultLayout";
 
 function ProtectedRoute({ children }) {
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const { loading } = useSelector((state) => state.alerts);
   const navigateToLogin = useNavigate();
+
   const validateToken = async () => {
     try {
+      dispatch(ShowLoading());
       const response = await axios.post(
         "/api/users/get-user-by-id",
         {},
@@ -16,14 +25,17 @@ function ProtectedRoute({ children }) {
           },
         }
       );
+      dispatch(HideLoading());
       if (response.data.success) {
-        setLoading(false);
+        dispatch(SetUser(response.data.data));
       } else {
-        setLoading(false);
+        localStorage.removeItem("token");
         navigateToLogin("/login");
       }
     } catch (error) {
-      setLoading(false);
+      localStorage.removeItem("token");
+      message.error(error.message);
+      dispatch(HideLoading());
       navigateToLogin("/login");
     }
   };
@@ -34,7 +46,7 @@ function ProtectedRoute({ children }) {
       navigateToLogin("/login");
     }
   }, []);
-  return <div>{loading ? <div>Loading...</div> : <div>{children}</div>}</div>;
+  return <div>{loading ? <div>Loading...</div> : <DefaultLayout />}</div>;
 }
 
 export default ProtectedRoute;
