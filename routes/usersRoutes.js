@@ -77,7 +77,7 @@ router.post("/register", async (req, res) => {
         data: null,
       });
     }
-    /*
+
     const validationEmail = validEmail(req.body.email);
     if (!validationEmail.valid) {
       return res.send({
@@ -96,7 +96,7 @@ router.post("/register", async (req, res) => {
         data: null,
       });
     }
-    */
+
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     req.body.password = hashedPassword;
     const newUser = new User(req.body);

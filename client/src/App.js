@@ -10,7 +10,9 @@ import { useSelector } from "react-redux";
 import AdminHome from "./pages/Admin/AdminHome";
 import AdminBuses from "./pages/Admin/AdminBuses";
 import AdminUsers from "./pages/Admin/AdminUsers";
-
+import BookNow from "./pages/BookNow";
+import Bookings from "./pages/Bookings";
+import AdminBookings from "./pages/Admin/AdminBookings";
 function App() {
   const { loading } = useSelector((state) => state.alerts);
   return (
@@ -27,13 +29,22 @@ function App() {
             }
           />
           <Route
-            path="/admin"
+            path="/book-now/:id"
             element={
               <ProtectedRoute>
-                <AdminHome />
+                <BookNow />
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/bookings"
+            element={
+              <ProtectedRoute>
+                <Bookings />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/admin/buses"
             element={
@@ -42,11 +53,20 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/admin/users"
             element={
               <ProtectedRoute>
                 <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/bookings"
+            element={
+              <ProtectedRoute>
+                <AdminBookings />
               </ProtectedRoute>
             }
           />
