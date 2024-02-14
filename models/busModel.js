@@ -22,7 +22,7 @@ const busSchema = new mongoose.Schema({
     required: true,
   },
   journeyDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   departure: {
@@ -34,7 +34,11 @@ const busSchema = new mongoose.Schema({
     required: true,
   },
   type: {
-    type: number,
+    type: String,
+    required: true,
+  },
+  fare: {
+    type: Number,
     required: true,
   },
   seatsBooked: {
@@ -43,7 +47,7 @@ const busSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "Yet to Start",
+    default: "Yet To Start",
   },
 });
 

@@ -83,7 +83,7 @@ function BusForm({ showBusForm, setShowBusForm, type = "add" }) {
               </Form.Item>
             </Col>
             <Col lg={12} xs={24}>
-              <Form.Item label="Fare" name="to">
+              <Form.Item label="Fare" name="fare">
                 <input type="number" />
               </Form.Item>
             </Col>
